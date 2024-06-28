@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class card : MonoBehaviour
+public class Card : MonoBehaviour
 {
-    public enum element
+    public enum Element
     {
         Left, LeftDown,
         LeftUp,
@@ -22,32 +22,31 @@ public class card : MonoBehaviour
         Opened
     }
 
-    public State _state { get; private set; }
+    public State CardState { get; private set; }
 
     void Update ()
     {
-        if (_state == State.Closed)
+        if (CardState == State.Closed)
         {
             if (Input.GetMouseButtonDown (0))
             {
                 Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-                RaycastHit hit;
 
-                if (Physics.Raycast (ray, out hit))
+                if (Physics.Raycast(ray, out RaycastHit hit))
                 {
                     if (hit.collider.gameObject == gameObject)
-                        _state = State.opening;
+                        CardState = State.opening;
                 }
             }
         }
-        else if (_state == State.opening)
+        else if (CardState == State.opening)
         {
-            transform.Rotate (Vector3.up * Time.deltaTime * 500);
+            transform.Rotate (500 * Time.deltaTime * Vector3.up);
 
             if (transform.rotation.eulerAngles.y == 180)
-                _state = State.Opened;
+                CardState = State.Opened;
         }
     }
 
-    public element ElementToShow { get; set; }
+    public Element ElementToShow { get; set; }
 }

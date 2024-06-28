@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public event Action OnGameStart;
     public event Action<int> OnGameOver;
 
-    List<card> cards;
+    List<Card> cards;
     bool gameIsRunning;
     
     public float TimeRemainder { get; private set; }
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     void Start ()
     {
-        cards = FindObjectsByType<card> (FindObjectsSortMode.None).ToList ();
+        cards = FindObjectsByType<Card> (FindObjectsSortMode.None).ToList ();
 
         StartGame ();
     }
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     void StartGame ()
     {
         int bugCardIndex = UnityEngine.Random.Range (0, cards.Count);
-        cards[bugCardIndex].ElementToShow = card.element.Bug;
+        cards[bugCardIndex].ElementToShow = Card.Element.Bug;
 
         TimeRemainder = 60;
         gameIsRunning = true;
