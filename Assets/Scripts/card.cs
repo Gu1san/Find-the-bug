@@ -25,7 +25,7 @@ public class Card : MonoBehaviour
     public State CardState { get; private set; }
     public Element ElementToShow { get; set; }
 
-    public void OnClick(Transform bug)
+    public void OnClick()
     {
         if(CardState == State.Closed)
         {
@@ -34,13 +34,17 @@ public class Card : MonoBehaviour
         }
     }
 
-    
-
     IEnumerator OpenCard()
     {
+        bool materialApplied = false;
         while(transform.rotation.eulerAngles.y < 180)
         {
             transform.Rotate(500 * Time.deltaTime * Vector3.up);
+            if(transform.rotation.eulerAngles.y > 90 && !materialApplied)
+            {
+                materialApplied = true;
+                GameManager.Instance.SetMaterial();
+            }
             yield return null;
         }
         Quaternion currentRotation = transform.rotation;

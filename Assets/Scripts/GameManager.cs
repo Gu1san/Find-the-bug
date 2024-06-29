@@ -55,10 +55,7 @@ public class GameManager : MonoBehaviour
                 {
                     cardTransform = card.transform;
                     cardRenderer = cardTransform.GetComponent<Renderer>();
-                    card.OnClick(bugTransform);
-                    float angle = GetAngle();
-                    Material mat = GetMaterialForAngle(angle);
-                    SetMaterial(mat);
+                    card.OnClick();
                 }
             }
         }
@@ -101,14 +98,13 @@ public class GameManager : MonoBehaviour
         return nearestValue;
     }
 
-    void SetMaterial(Material material)
+    public void SetMaterial()
     {
-        if (material != null)
+        float angle = GetAngle();
+        Material material = GetMaterialForAngle(angle);
+        if (cardRenderer != null)
         {
-            if (cardRenderer != null)
-            {
-                cardRenderer.material = material;
-            }
+            cardRenderer.material = material;
         }
     }
 
