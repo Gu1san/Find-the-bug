@@ -18,35 +18,30 @@ public class Card : MonoBehaviour
     public enum State
     {
         Closed,
-        opening,
+        Opening,
         Opened
     }
 
     public State CardState { get; private set; }
+    public Element ElementToShow { get; set; }
 
-    void Update ()
+    public void OnClick()
     {
-        if (CardState == State.Closed)
+        if(CardState == State.Closed)
         {
-            if (Input.GetMouseButtonDown (0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    if (hit.collider.gameObject == gameObject)
-                        CardState = State.opening;
-                }
-            }
-        }
-        else if (CardState == State.opening)
-        {
-            transform.Rotate (500 * Time.deltaTime * Vector3.up);
-
-            if (transform.rotation.eulerAngles.y == 180)
-                CardState = State.Opened;
+            CardState = State.Opening;
+            StartCoroutine(OpenCard());
         }
     }
 
-    public Element ElementToShow { get; set; }
+    IEnumerator OpenCard()
+    {
+        while(transform.rotation.eulerAngles.y < 180)
+        {
+            transform.Rotate(500 * Time.deltaTime * Vector3.up);
+            yield return null;
+        }
+        Quaternion currentRotation = transform.rotation;
+        transform.rotation = Quaternion.Euler(currentRotation.x, 180, currentRotation.z);
+    }
 }
