@@ -25,7 +25,7 @@ public class Card : MonoBehaviour
     public State CardState { get; private set; }
     public Element ElementToShow { get; set; }
 
-    public void OnClick()
+    public void OnClick(Transform bug)
     {
         if(CardState == State.Closed)
         {
@@ -33,6 +33,8 @@ public class Card : MonoBehaviour
             StartCoroutine(OpenCard());
         }
     }
+
+    
 
     IEnumerator OpenCard()
     {
@@ -43,5 +45,10 @@ public class Card : MonoBehaviour
         }
         Quaternion currentRotation = transform.rotation;
         transform.rotation = Quaternion.Euler(currentRotation.x, 180, currentRotation.z);
+        CardState = State.Opened;
+        if (ElementToShow == Element.Bug)
+        {
+            Debug.Log("Inseto encontrado");
+        }
     }
 }

@@ -15,7 +15,12 @@ public class GameManager : MonoBehaviour
 
     List<Card> cards;
     bool gameIsRunning;
+
+    Renderer cardRenderer;
+    Transform cardTransform;
     
+    public Material[] CardMaterials;
+    public Transform bugTransform { get; private set; }
     public float TimeRemainder { get; private set; }
     public int Score { get; private set; }
 
@@ -28,9 +33,10 @@ public class GameManager : MonoBehaviour
 
     void StartGame ()
     {
-        int bugCardIndex = UnityEngine.Random.Range (0, cards.Count);
+        int bugCardIndex = UnityEngine.Random.Range(0, cards.Count);
         cards[bugCardIndex].ElementToShow = Card.Element.Bug;
-
+        bugTransform = cards[bugCardIndex].transform;
+        Debug.Log(cards[bugCardIndex].name);
         TimeRemainder = 60;
         gameIsRunning = true;
 
@@ -46,12 +52,67 @@ public class GameManager : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 if (hit.collider.gameObject.TryGetComponent(out Card card))
-                    card.OnClick();
+                {
+                    cardTransform = card.transform;
+                    cardRenderer = cardTransform.GetComponent<Renderer>();
+                    card.OnClick(bugTransform);
+                    float angle = GetAngle();
+                    Material mat = GetMaterialForAngle(angle);
+                    SetMaterial(mat);
+                }
             }
         }
     }
 
-    void FixedUpdate ()
+    float GetAngle()
+    {
+        Vector3 direction = bugTransform.position - cardTransform.position;
+        float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        angle = Mathf.Repeat(angle, 360f);
+        return angle;
+    }
+
+    public Material GetMaterialForAngle(float angle)
+    {
+        if (angle % 45 != 0)
+        {
+            angle = RoundToNearestDiagonal(angle);
+        }
+        int index = Mathf.RoundToInt(angle / 45f) % CardMaterials.Length;
+        return CardMaterials[index];
+    }
+
+    private float RoundToNearestDiagonal(float angle)
+    {
+        float[] diagonalAngles = { 45f, 135f, 225f, 315f };
+        float nearestValue = diagonalAngles[0];
+        float minDifference = Mathf.Abs(angle - nearestValue);
+
+        foreach (float possibleValue in diagonalAngles)
+        {
+            float difference = Mathf.Abs(angle - possibleValue);
+            if (difference < minDifference)
+            {
+                minDifference = difference;
+                nearestValue = possibleValue;
+            }
+        }
+
+        return nearestValue;
+    }
+
+    void SetMaterial(Material material)
+    {
+        if (material != null)
+        {
+            if (cardRenderer != null)
+            {
+                cardRenderer.material = material;
+            }
+        }
+    }
+
+    void FixedUpdate()
     {
         if (!gameIsRunning)
             return;
