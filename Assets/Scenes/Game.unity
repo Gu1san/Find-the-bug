@@ -1221,7 +1221,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 371441634}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1198526743}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ResetCards
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &371441634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4286,6 +4298,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bugMaterial: {fileID: 2100000, guid: 050db1216e20b054c87f853db3c8b854, type: 2}
   emptyMaterial: {fileID: 2100000, guid: 85a74f7673eaa294fabac5f7f2df682f, type: 2}
+  roundDuration: 10
+  bugValue: 10
   CardMaterials:
   - {fileID: 2100000, guid: deb4a6d3119cc2647ba0a1ee1bd4fc97, type: 2}
   - {fileID: 2100000, guid: 24279c343eca8b448a1ae8280626fe92, type: 2}
@@ -5402,7 +5416,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hud: {fileID: 538004375}
   gameOverScreen: {fileID: 1115790626}
-  scoreText: {fileID: 700279876}
+  scoreObject: {fileID: 700279876}
+  scoreAnimationSpeed: 0.2
 --- !u!1 &1427792187
 GameObject:
   m_ObjectHideFlags: 0

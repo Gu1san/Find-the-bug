@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Material bugMaterial;
     public Material emptyMaterial;
+    [SerializeField] int roundDuration = 60;
+    [SerializeField] int bugValue = 10;
     [SerializeField] Material[] CardMaterials;
     public Transform bugTransform { get; private set; }
     public float TimeRemainder { get; private set; }
@@ -30,21 +32,26 @@ public class GameManager : MonoBehaviour
     void Start ()
     {
         cards = FindObjectsByType<Card>(FindObjectsSortMode.None).ToList();
-        TimeRemainder = 60;
         gameIsRunning = true;
-        StartGame ();
+        TimeRemainder = roundDuration;
+        StartGame();
     }
 
-    void StartGame ()
+    void StartGame()
     {
         int bugCardIndex = UnityEngine.Random.Range(0, cards.Count);
         cards[bugCardIndex].ElementToShow = Card.Element.Bug;
         bugTransform = cards[bugCardIndex].transform;
-        OnGameStart?.Invoke ();
+        if (gameIsRunning) return;
+        TimeRemainder = roundDuration;
+        Score = 0;
+        gameIsRunning = true;
+        OnGameStart?.Invoke();
     }
 
     public void ResetCards()
     {
+        Score += bugValue;
         cards.ForEach(card =>
         {
             card.ElementToShow = Card.Element.Empty;
@@ -58,7 +65,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && gameIsRunning)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -137,7 +144,7 @@ public class GameManager : MonoBehaviour
         if (TimeRemainder < 0)
         {
             gameIsRunning = false;
-            OnGameOver?.Invoke (Score);
+            OnGameOver?.Invoke(Score);
         }
     }
 }
