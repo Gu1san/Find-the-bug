@@ -6,12 +6,6 @@ public class Card : MonoBehaviour
 {
     public enum Element
     {
-        Left, LeftDown,
-        LeftUp,
-        Right,
-        RightDown, RightUp,
-        Up,
-        Down,
         Empty,
         Bug
     };
@@ -19,7 +13,6 @@ public class Card : MonoBehaviour
     public enum State
     {
         Closed,
-        Turning,
         Opened
     }
 
