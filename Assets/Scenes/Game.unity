@@ -4284,6 +4284,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec0f109183f4f68469d7c2d4d07dda13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bugMaterial: {fileID: 2100000, guid: 050db1216e20b054c87f853db3c8b854, type: 2}
+  emptyMaterial: {fileID: 2100000, guid: 85a74f7673eaa294fabac5f7f2df682f, type: 2}
   CardMaterials:
   - {fileID: 2100000, guid: deb4a6d3119cc2647ba0a1ee1bd4fc97, type: 2}
   - {fileID: 2100000, guid: 24279c343eca8b448a1ae8280626fe92, type: 2}

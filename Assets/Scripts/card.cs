@@ -12,13 +12,14 @@ public class Card : MonoBehaviour
         RightDown, RightUp,
         Up,
         Down,
+        Empty,
         Bug
     };
 
     public enum State
     {
         Closed,
-        Opening,
+        Turning,
         Opened
     }
 
@@ -29,30 +30,51 @@ public class Card : MonoBehaviour
     {
         if(CardState == State.Closed)
         {
-            CardState = State.Opening;
-            StartCoroutine(OpenCard());
+            StartCoroutine(RotateCard());
         }
     }
 
-    IEnumerator OpenCard()
+    public void ResetCard()
+    {
+        StartCoroutine(RotateCard());
+    }
+
+    IEnumerator RotateCard()
     {
         bool materialApplied = false;
-        while(transform.rotation.eulerAngles.y < 180)
+        float targetAngle = Mathf.Abs(transform.rotation.eulerAngles.y) >= 180 ? 360 : 180;
+        float initialAngle = transform.rotation.eulerAngles.y;
+
+        while (Mathf.Abs(transform.rotation.eulerAngles.y - targetAngle) > 2)
         {
-            transform.Rotate(500 * Time.deltaTime * Vector3.up);
-            if(transform.rotation.eulerAngles.y > 90 && !materialApplied)
+            transform.Rotate(500 * Time.deltaTime * Vector3.up, Space.World);
+
+            // Aplicar material no meio da rotação
+            if (!materialApplied && Mathf.Abs(transform.rotation.eulerAngles.y - (initialAngle + 90)) < 5f)
             {
                 materialApplied = true;
-                GameManager.Instance.SetMaterial();
+                if (CardState == State.Closed)
+                {
+                    GameManager.Instance.SetMaterial();
+                }
+                else
+                {
+                    GetComponent<Renderer>().material = GameManager.Instance.emptyMaterial;
+                }
             }
+
             yield return null;
         }
+
         Quaternion currentRotation = transform.rotation;
-        transform.rotation = Quaternion.Euler(currentRotation.x, 180, currentRotation.z);
-        CardState = State.Opened;
+        transform.rotation = Quaternion.Euler(currentRotation.x, targetAngle, currentRotation.z);
+
+        CardState = CardState == State.Closed ? State.Opened : State.Closed;
+
         if (ElementToShow == Element.Bug)
         {
-            Debug.Log("Inseto encontrado");
+            GameManager.Instance.ResetCards();
         }
     }
+
 }

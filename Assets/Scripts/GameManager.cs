@@ -13,21 +13,25 @@ public class GameManager : MonoBehaviour
     public event Action OnGameStart;
     public event Action<int> OnGameOver;
 
+    Card selectedCard;
     List<Card> cards;
     bool gameIsRunning;
 
     Renderer cardRenderer;
     Transform cardTransform;
-    
-    public Material[] CardMaterials;
+
+    [SerializeField] Material bugMaterial;
+    public Material emptyMaterial;
+    [SerializeField] Material[] CardMaterials;
     public Transform bugTransform { get; private set; }
     public float TimeRemainder { get; private set; }
     public int Score { get; private set; }
 
     void Start ()
     {
-        cards = FindObjectsByType<Card> (FindObjectsSortMode.None).ToList ();
-
+        cards = FindObjectsByType<Card>(FindObjectsSortMode.None).ToList();
+        TimeRemainder = 60;
+        gameIsRunning = true;
         StartGame ();
     }
 
@@ -36,11 +40,20 @@ public class GameManager : MonoBehaviour
         int bugCardIndex = UnityEngine.Random.Range(0, cards.Count);
         cards[bugCardIndex].ElementToShow = Card.Element.Bug;
         bugTransform = cards[bugCardIndex].transform;
-        Debug.Log(cards[bugCardIndex].name);
-        TimeRemainder = 60;
-        gameIsRunning = true;
-
         OnGameStart?.Invoke ();
+    }
+
+    public void ResetCards()
+    {
+        cards.ForEach(card =>
+        {
+            card.ElementToShow = Card.Element.Empty;
+            if(card.CardState == Card.State.Opened)
+            {
+                card.ResetCard();
+            }
+        });
+        StartGame();
     }
 
     private void Update()
@@ -53,6 +66,7 @@ public class GameManager : MonoBehaviour
             {
                 if (hit.collider.gameObject.TryGetComponent(out Card card))
                 {
+                    selectedCard = card;
                     cardTransform = card.transform;
                     cardRenderer = cardTransform.GetComponent<Renderer>();
                     card.OnClick();
@@ -100,10 +114,15 @@ public class GameManager : MonoBehaviour
 
     public void SetMaterial()
     {
-        float angle = GetAngle();
-        Material material = GetMaterialForAngle(angle);
         if (cardRenderer != null)
         {
+            if(selectedCard.ElementToShow == Card.Element.Bug)
+            {
+                cardRenderer.material = bugMaterial;
+                return;
+            }
+            float angle = GetAngle();
+            Material material = GetMaterialForAngle(angle);
             cardRenderer.material = material;
         }
     }
