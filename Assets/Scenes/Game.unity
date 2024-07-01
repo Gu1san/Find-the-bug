@@ -1438,7 +1438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bugMaterial: {fileID: 2100000, guid: 050db1216e20b054c87f853db3c8b854, type: 2}
   emptyMaterial: {fileID: 2100000, guid: 85a74f7673eaa294fabac5f7f2df682f, type: 2}
-  roundDuration: 10
+  roundDuration: 60
   bugValue: 10
   CardMaterials:
   - {fileID: 2100000, guid: deb4a6d3119cc2647ba0a1ee1bd4fc97, type: 2}

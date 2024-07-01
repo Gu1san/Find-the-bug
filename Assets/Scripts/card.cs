@@ -38,7 +38,7 @@ public class Card : MonoBehaviour
         float targetAngle = Mathf.Abs(transform.rotation.eulerAngles.y) >= 180 ? 360 : 180;
         float initialAngle = transform.rotation.eulerAngles.y;
 
-        while (Mathf.Abs(transform.rotation.eulerAngles.y - targetAngle) > 2)
+        while (Mathf.Abs(transform.rotation.eulerAngles.y - targetAngle) > 5)
         {
             transform.Rotate(500 * Time.deltaTime * Vector3.up, Space.World);
 
