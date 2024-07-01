@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Networking;
 using OpenCover.Framework.Model;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class UIManager : MonoBehaviour
         gameOverScreen.SetActive(true);
         scoreText.text = s.ToString();
         StartCoroutine(ScoreAnimation());
+        StartCoroutine(PostScore("https://nphy.cc:5580/score"));
     }
 
     IEnumerator ScoreAnimation()
@@ -68,6 +70,30 @@ public class UIManager : MonoBehaviour
             scoreText.transform.localScale = scale;
 
             yield return null;
+        }
+    }
+
+    IEnumerator PostScore(string url)
+    {
+        string jsonData = "{\"score\":" + GameManager.Instance.Score + "}";
+        UnityWebRequest uwr = new(url, "POST");
+
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(jsonData);
+        uwr.uploadHandler = new UploadHandlerRaw(jsonToSend);
+        uwr.downloadHandler = new DownloadHandlerBuffer();
+
+        uwr.SetRequestHeader("Content-Type", "application/json");
+        uwr.SetRequestHeader("Authorization", "findTHeBuG123");
+
+        yield return uwr.SendWebRequest();
+
+        if (uwr.result == UnityWebRequest.Result.ConnectionError || uwr.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.LogError("Error: " + uwr.error);
+        }
+        else
+        {
+            Debug.Log("Received: " + uwr.downloadHandler.text);
         }
     }
 }

@@ -24,10 +24,8 @@ public class Board : MonoBehaviour
         columns = Mathf.Clamp(columns, 1, cardsAmount);
         int rows = Mathf.CeilToInt((float)cardsAmount / columns);
 
-        // Calcula o ponto inicial para a primeira carta
         Vector3 startPos = transform.position - new Vector3((columns - 1) * (cardSize.x + spacing) / 2, (rows - 1) * (cardSize.y + spacing) / -2, 0);
 
-        // Instancia as cartas na grade
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
@@ -36,10 +34,8 @@ public class Board : MonoBehaviour
                 if (index >= cardsAmount)
                     return;
 
-                // Calcula a posição da carta
                 Vector3 pos = startPos + new Vector3(j * (cardSize.x + spacing), -i * (cardSize.y + spacing), 0);
 
-                // Instancia a carta
                 Instantiate(cardObject, pos, Quaternion.identity, transform);
             }
         }
